@@ -2,23 +2,28 @@
 #include "ui_mainwindow.h"
 #include <QTime>
 #include <QDebug>
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(int R,int C,QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    solver(),
+    solver(R,C),
     render()
 {
     ui->setupUi(this);
 
-    s[0][0]=new Square(20,20,40,40);
-    s[0][1]=new Square(20,60,40,40);
-    s[0][2]=new Square(20,100,40,40);
-    s[1][0]=new Square(60,20,40,40);
-    s[1][1]=new Square(60,60,40,40);
-    s[1][2]=new Square(60,100,40,40);
-    s[2][0]=new Square(100,20,40,40);
-    s[2][1]=new Square(100,60,40,40);
-    s[2][2]=new Square(100,100,40,40);
+    s= QVector<QVector<Square *> >(R,QVector<Square *>(C));
+    ROWS=R;
+    COLS=C;
+    int y=20;
+    for(int row=0;row<R;row++)
+    {
+        int x=20;
+        for(int col=0;col<C;col++)
+        {
+            s[row][col]=new Square(x,y,40,40);
+            x+=40;
+        }
+        y+=40;
+    }
 
     connect(&solver,SIGNAL(doneSolution(QVector<GridUpdateEvent *>)),this,SLOT(getEvents(QVector<GridUpdateEvent *>)));
     connect(&render,SIGNAL(doneWaiting()),this,SLOT(doneWaiting()));
@@ -29,9 +34,9 @@ void MainWindow::paintEvent(QPaintEvent * e)
 {
     QPainter p;
     p.begin(this);
-    for(int r=0;r<3;r++)
+    for(int r=0;r<ROWS;r++)
     {
-        for (int c=0;c<3;c++)
+        for (int c=0;c<COLS;c++)
         {
             p.setBrush(s[r][c]->getColor());
             p.drawRect(*(s[r][c]));

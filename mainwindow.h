@@ -14,9 +14,11 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 private:
     QVector<GridUpdateEvent *> ev;
-    Square * s[3][3];
+    QVector<QVector<Square *> > s;
+    int ROWS;
+    int COLS;
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(int R,int C,QWidget *parent = 0);
     ~MainWindow();
 
 public slots:

@@ -1,18 +1,16 @@
 #include "solverthread.h"
 #include <QDebug>
-SolverThread::SolverThread(QObject *parent) :
+SolverThread::SolverThread(int R,int C,QObject *parent) :
     QThread(parent)
 {
     colors.push_back(QColor(255,255,255)); // White
-    colors.push_back(QColor(255,0,0)); // Red
-    colors.push_back(QColor(0,0,255)); // Blue
-    colors.push_back(QColor(0,255,0)); // Green
-    colors.push_back(QColor(255,255,0)); // Yellow
-    for(int r = 0; r < 3; r++)
-    {
-        for(int c = 0; c < 3; c++)
-            grid[r][c]=0;
-    }
+    colors.push_back(QColor(75,0,130));
+    colors.push_back(QColor(139,0,139));
+    colors.push_back(QColor(153,50,204));
+    colors.push_back(QColor(186,85,211));
+    grid = QVector<QVector<short> >(R,QVector<short>(C,0));
+    ROWS = R;
+    COLS = C;
 }
 
 SolverThread::~SolverThread()
@@ -33,7 +31,7 @@ bool SolverThread::validGrid(int row,int col){
         {
             if(dx==0 && dy==0)
                 continue;
-            if(row+dx<0 || row+dx>2 || col+dy<0 || col+dy>2)
+            if(row+dx<0 || row+dx>ROWS-1 || col+dy<0 || col+dy>COLS-1)
                 continue;
             if(grid[row][col]==grid[row+dx][col+dy])
                 return false;
@@ -46,16 +44,16 @@ void SolverThread::solve(int row,int col)
 {
     //Done Backtracking
 //    qDebug()<<row<<" "<<col<<"\n";
-    if(row == 3)
+    if(row == ROWS)
         return ;
-    if(col == 3)
+    if(col == COLS)
     {
         solve(row+1,0);
         return ;
     }
     if(col == -1)
     {
-        solve(row-1,2);
+        solve(row-1,COLS-1);
         return ;
     }
     if(grid[row][col] == 4)

@@ -13,11 +13,13 @@ class SolverThread : public QThread
 private:
     QVector<QColor> colors;
     QVector<GridUpdateEvent *> events;
-    short grid[3][3];
+    QVector<QVector<short> > grid;
     void solve(int row,int col);
     bool validGrid(int row,int col);
+    int ROWS;
+    int COLS;
 public:
-    explicit SolverThread(QObject *parent = 0);
+    explicit SolverThread(int R, int C,QObject *parent = 0);
     void run( void );
     ~SolverThread();
 signals:

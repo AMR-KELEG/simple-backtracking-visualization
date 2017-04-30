@@ -10,7 +10,7 @@ void RenderThread::run( void)
 {
     while(true)
     {
-        this->msleep(1000);
+        this->msleep(300);
         emit doneWaiting();
     }
 }
